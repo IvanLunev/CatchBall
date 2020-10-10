@@ -16,4 +16,5 @@ while not finished:
         if event.type == pygame.QUIT:
             finished = True
 
+
 pygame.quit()
