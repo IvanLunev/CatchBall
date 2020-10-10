@@ -18,4 +18,3 @@ while not finished:
 
 
 pygame.quit()
-
