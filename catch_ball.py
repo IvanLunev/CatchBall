@@ -1,12 +1,34 @@
 import pygame
 from pygame.draw import *
+from random import randint
+
 pygame.init()
 
-FPS = 30
-screen = pygame.display.set_mode((400, 400))
+FPS = 2
+screen = pygame.display.set_mode((1000, 700))
 
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
+YELLOW = (255, 255, 0)
+GREEN = (0, 255, 0)
+MAGENTA = (255, 0, 255)
+CYAN = (0, 255, 255)
+BLACK = (0, 0, 0)
+COLORS = [RED, BLUE, YELLOW, GREEN, MAGENTA, CYAN]
+
+
+def new_ball():
+    """
+    Draws a ball.
+    :return: None
+    :rtype: None
+    """
+    x = randint(100, 1100)
+    y = randint(100, 900)
+    r = randint(10, 100)
+    color = COLORS[randint(0, 5)]
+    circle(screen, color, (x, y), r)
+
 
 pygame.display.update()
 clock = pygame.time.Clock()
@@ -17,12 +39,9 @@ while not finished:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             finished = True
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 1:
-                circle(screen, RED, event.pos, 50)
-                pygame.display.update()
-            elif event.button == 3:
-                circle(screen,  BLUE, event.pos, 50)
-                pygame.display.update()
+
+    new_ball()
+    pygame.display.update()
+    screen.fill(BLACK)
 
 pygame.quit()
