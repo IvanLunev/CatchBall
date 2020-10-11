@@ -4,14 +4,18 @@ Game: Catch the ball
 import pygame
 from pygame.draw import *
 from random import randint
+import random
+import math
 
 pygame.init()
 
 pygame.font.init()
 myfont = pygame.font.SysFont('Comic Sans MS', 30)
 
-FPS = 1
-screen = pygame.display.set_mode((1000, 700))
+FPS = 30
+WINDOW_x = 1000
+WINDOW_y = 700
+screen = pygame.display.set_mode((WINDOW_x, WINDOW_y))
 
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
@@ -31,8 +35,8 @@ def new_ball():
     :rtype: None
     """
     global center_x, center_y, radius
-    center_x = randint(100, 900)
-    center_y = randint(100, 600)
+    center_x = randint(100, WINDOW_x - 100)
+    center_y = randint(100, WINDOW_y - 100)
     radius = randint(10, 100)
     color = COLORS[randint(0, 5)]
     circle(screen, color, (center_x, center_y), radius)
@@ -79,10 +83,53 @@ def draw_score(score):
     screen.blit(textsurface, (20, 20))
 
 
+class Ball:
+    """
+    Makes a ball
+    """
+
+    def __init__(self):
+        """
+        Sets:
+            Ball coordinates (x, y);
+            Ball radius r;
+            Ball speed;
+            Ball angle.
+        """
+        self.x = randint(100, WINDOW_x - 100)
+        self.y = randint(100, WINDOW_y - 100)
+        self.r = randint(10, 100)
+        self.speed = randint(1, 5) * 50 / FPS
+        self.angle = random.uniform(0, 2 * math.pi)
+
+    def update(self):
+        """
+        Updates parameters
+        :return: None
+        :rtype: None
+        """
+        if self.x - self.r + self.speed * math.cos(self.angle) < 0:
+            self.angle = math.pi - self.angle
+        elif self.x + self.r + self.speed * math.cos(self.angle) > WINDOW_x:
+            self.angle = math.pi - self.angle
+        elif self.y - self.r + self.speed * math.sin(self.angle) < 0:
+            self.angle = 2 * math.pi - self.angle
+        elif self.y + self.r + self.speed * math.sin(self.angle) > WINDOW_y:
+            self.angle = 2 * math.pi - self.angle
+
+        self.x = self.x + self.speed * math.cos(self.angle)
+        self.y = self.y + self.speed * math.sin(self.angle)
+
+        circle(screen, BLUE, (self.x, self.y), self.r)
+
+
 pygame.display.update()
 clock = pygame.time.Clock()
 finished = False
+
 Score = 0
+ball = Ball()
+
 while not finished:
     clock.tick(FPS)
     for event in pygame.event.get():
@@ -94,7 +141,8 @@ while not finished:
                 draw_score(Score)
             click(event)
 
-    new_ball()
+    ball.update()
+    # new_ball()
     draw_score(Score)
     pygame.display.update()
     screen.fill(BLACK)
