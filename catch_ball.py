@@ -12,7 +12,7 @@ pygame.init()
 pygame.font.init()
 myfont = pygame.font.SysFont('Comic Sans MS', 30)
 
-FPS = 60
+FPS = 120
 WINDOW_x = 1000
 WINDOW_y = 700
 screen = pygame.display.set_mode((WINDOW_x, WINDOW_y))
