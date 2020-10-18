@@ -66,18 +66,24 @@ class Ball:
     def __init__(self, coords):
         """
         Sets:
-            Random color;
             Ball coordinates (x, y);
-            Ball radius r;
             Ball speed;
-            Ball angle.
+            Ball color corresponding speed;
+            Ball radius r;
+            Ball score corresponding speed and r;
+            Ball starting angle.
         """
-        self.color = (randint(0, 255), randint(0, 255), randint(0, 255))
+        self.speed = randint(1, 6)
+        self.color = COLORS[self.speed - 1]
+
+        self.r = randint(5, 10)
+        self.score = self.speed * (11 - self.r)
+
+        self.speed = self.speed * 150 / FPS
+        self.r = self.r * 5
 
         self.x = coords[0]
         self.y = coords[1]
-        self.r = randint(25, 50)
-        self.speed = randint(1, 5) * 150 / FPS
         self.angle = random.uniform(0, 2 * math.pi)
 
     def update(self):
@@ -164,7 +170,7 @@ while not finished:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             for ball in balls:
                 if cross_check(event.pos, (ball.x, ball.y), ball.r):
-                    Score += 1
+                    Score += ball.score
                     draw_score(Score)
 
                     coords = (randint(100, WINDOW_x - 100), randint(100, WINDOW_y - 100))
