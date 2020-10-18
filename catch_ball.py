@@ -58,6 +58,20 @@ def draw_score(score):
     screen.blit(textsurface, (20, 20))
 
 
+def draw_time(time_):
+    """
+    Draws time.
+    :param time_: Seconds
+    :type time_: float
+    :return: None
+    :rtype: None
+    """
+    textsurface = myfont.render('Time left: ' + str(time_), False, BLACK)
+    screen.blit(textsurface, (WINDOW_x - 220, 20))
+    textsurface = myfont.render('Time left: ' + str(time_), False, WHITE)
+    screen.blit(textsurface, (WINDOW_x - 220, 20))
+
+
 class Ball:
     """
     Makes a ball
@@ -162,15 +176,19 @@ for k in range(n_balls):
         coords = (randint(100, WINDOW_x - 100), randint(100, WINDOW_y - 100))
     balls.append(Ball(coords))
 
+start_ticks = pygame.time.get_ticks()
+
 while not finished:
     clock.tick(FPS)
+    seconds = (pygame.time.get_ticks() - start_ticks) / 1000
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             finished = True
         elif event.type == pygame.MOUSEBUTTONDOWN:
             for ball in balls:
                 if cross_check(event.pos, (ball.x, ball.y), ball.r):
-                    Score += ball.score
+                    if seconds < 60:
+                        Score += ball.score
                     draw_score(Score)
 
                     coords = (randint(100, WINDOW_x - 100), randint(100, WINDOW_y - 100))
@@ -184,6 +202,7 @@ while not finished:
     for ball in balls:
         ball.update()
     draw_score(Score)
+    draw_time(max(round(60 - seconds, 1), 0))
     pygame.display.update()
     screen.fill(BLACK)
 
